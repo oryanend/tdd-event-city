@@ -41,10 +41,6 @@ public class CityController {
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id){
-        City city = repository.findById(id).orElse(null);
-        if (city == null){
-            return ResponseEntity.notFound().build();
-        }
         service.delete(id);
         return ResponseEntity.noContent().build();
     }
