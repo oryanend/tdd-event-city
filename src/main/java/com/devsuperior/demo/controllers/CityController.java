@@ -1,7 +1,10 @@
 package com.devsuperior.demo.controllers;
 
 import com.devsuperior.demo.dto.CityDTO;
+import com.devsuperior.demo.entities.City;
+import com.devsuperior.demo.repositories.CityRepository;
 import com.devsuperior.demo.services.CityService;
+import com.devsuperior.demo.services.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +19,9 @@ public class CityController {
 
     @Autowired
     private CityService service;
+
+    @Autowired
+    private CityRepository repository;
 
     @GetMapping
     public ResponseEntity<List<CityDTO>> findAll(){
@@ -35,6 +41,10 @@ public class CityController {
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id){
+        City city = repository.findById(id).orElse(null);
+        if (city == null){
+            return ResponseEntity.notFound().build();
+        }
         service.delete(id);
         return ResponseEntity.noContent().build();
     }
